@@ -2,7 +2,6 @@ package Fuzzer
 
 import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
-	"math/big"
 )
 
 var (
@@ -23,21 +22,6 @@ var (
 )
 
 // RunContract todo
-func RunContract(input INPUT, program string, fcost any) (PID, string) {
-	// coding to byte
-
-	// send to runner
-
-	// get the result
-
-	a := big.NewInt(input[0].Int())
-	b := big.NewInt(input[1].Int())
-	c := big.NewInt(input[2].Int())
-
-	path := Baz(a, b, c)
-
-	pid := PID{input: input}
-
-	return pid, path
+func RunContract(input INPUTDATA, program string, fcost any) (PID, string) {
 
 }

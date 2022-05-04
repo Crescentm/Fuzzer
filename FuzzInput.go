@@ -2,64 +2,32 @@ package Fuzzer
 
 import (
 	"errors"
-	"reflect"
+	"strings"
 )
 
-func FuzzInput(input INPUT) (INPUT, int, error) {
+func FuzzInput(input INPUTDATA, inputType INPUTTYPE) (INPUTDATA, int, error) {
 	if input == nil {
-		return nil, 0, errors.New("no input")
+		return input, 0, errors.New("no input")
 	}
-
-	var inputNew = make(INPUT, len(input))
+	inputNew := make(INPUTDATA, len(input))
 	copy(inputNew, input)
-
 	//which one input to variate
 	choice := RandomChoose(len(input))
 
-	switch input[choice].Kind() {
-
-	//todo: add more type
-	case reflect.Int8:
-		random, err := Int8Random()
+	if strings.HasPrefix(inputType[choice].String(), "int") {
+		randNum, err := IntRandom(uint(inputType[choice].Size))
 		if err != nil {
-			return input, 0, err
+			return nil, 0, err
 		}
-		inputNew[choice] = reflect.ValueOf(random)
-
-	case reflect.Int16:
-		random, err := Int16Random()
+		inputNew[choice] = randNum
+	} else if strings.HasPrefix(inputType[choice].String(), "uint") {
+		randNum, err := IntRandom(uint(inputType[choice].Size))
 		if err != nil {
-			return input, 0, err
+			return nil, 0, err
 		}
-		inputNew[choice] = reflect.ValueOf(random)
-
-	case reflect.Int32:
-		random, err := Int32Random()
-		if err != nil {
-			return input, 0, err
-		}
-		inputNew[choice] = reflect.ValueOf(random)
-
-	case reflect.Uint8:
-		random, err := Uint8Random()
-		if err != nil {
-			return input, 0, err
-		}
-		inputNew[choice] = reflect.ValueOf(random)
-
-	case reflect.Uint16:
-		random, err := Uint16Random()
-		if err != nil {
-			return input, 0, err
-		}
-		inputNew[choice] = reflect.ValueOf(random)
-
-	case reflect.Uint32:
-		random, err := Uint32Random()
-		if err != nil {
-			return input, 0, err
-		}
-		inputNew[choice] = reflect.ValueOf(random)
+		inputNew[choice] = randNum
+	} else {
+		inputNew[choice] = input[choice]
 	}
 
 	return inputNew, choice, nil

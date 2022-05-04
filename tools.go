@@ -12,7 +12,7 @@ func RandomChoose(maxnum int) int {
 }
 
 // AssignEnergy todo
-func AssignEnergy(input INPUT) int {
+func AssignEnergy(input INPUTDATA) int {
 	return 3
 }
 
@@ -22,9 +22,9 @@ func Interrupted() bool {
 }
 
 // PickInput base on map random
-func PickInput(pids PIDS) (INPUT, COST) {
+func PickInput(pids PIDS) (INPUTDATA, COST) {
 	for _, pid := range pids {
-		return pid.input, pid.cost
+		return pid.inputdata, pid.cost
 	}
 	return nil, nil
 }

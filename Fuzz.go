@@ -1,17 +1,19 @@
 package Fuzzer
 
 import (
+	"github.com/ethereum/go-ethereum/accounts/abi"
 	"math/big"
-	"reflect"
 )
 
-type INPUT []reflect.Value
+type INPUTDATA []interface{}
+type INPUTTYPE []abi.Type
 type COST []big.Int
 type PIDS map[string]PID
 
 type PID struct {
-	input INPUT
-	cost  COST
+	inputData INPUTDATA
+	inputType INPUTTYPE
+	cost      COST
 }
 
 func Fuzz(program string, seeds any, fcost any) {
@@ -20,17 +22,16 @@ func Fuzz(program string, seeds any, fcost any) {
 	for !Interrupted() {
 		input, cost := PickInput(pids)
 		energy := 0
-		maxenergy := AssignEnergy(input)
+		maxEnergy := AssignEnergy(input)
 
-		var predictedInput []reflect.Value = nil
+		var predictedInput INPUTDATA
 
-		for energy < maxenergy || predictedInput != nil {
-			var inputNew INPUT = nil
+		for energy < maxEnergy || predictedInput != nil {
+			var inputNew INPUTDATA
 			var err error
-			var choice int = 0
+			var choice = 0
 
 			if predictedInput != nil {
-				copy(inputNew, predictedInput)
 				predictedInput = nil
 			} else {
 				inputNew, choice, err = FuzzInput(input)
@@ -44,7 +45,7 @@ func Fuzz(program string, seeds any, fcost any) {
 				Addpid(pidNew, pidPath, pids)
 			}
 
-			if energy < maxenergy {
+			if energy < maxEnergy {
 				costNew := pidNew.cost
 				predictedInput = Predict(input, cost, inputNew, costNew, choice)
 			}
