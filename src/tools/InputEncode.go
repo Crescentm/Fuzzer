@@ -5,8 +5,8 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-func InputEncode(inputList pidType.INPUTDATA, methodName string, abiObject abi.ABI) []byte {
-	inputPacked, err := abiObject.Pack(methodName, inputList...)
+func InputEncode(inputList pidType.INPUTDATA, methodName string, AbiObject abi.ABI) []byte {
+	inputPacked, err := AbiObject.Pack(methodName, inputList...)
 	if err != nil {
 		panic(err)
 	}

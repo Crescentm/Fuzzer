@@ -5,11 +5,10 @@ import (
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 
-func InputParse(methodObject abi.Method) (int, pidType.INPUTTYPE) {
-	inputSize := len(methodObject.Inputs)
+func InputParse(methodObject abi.Method) pidType.INPUTTYPE {
 	var inputType pidType.INPUTTYPE
 	for _, arg := range methodObject.Inputs {
 		inputType = append(inputType, arg.Type)
 	}
-	return inputSize, inputType
+	return inputType
 }
